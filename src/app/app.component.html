@@ -1,0 +1,106 @@
+<div class="w-100 h-100 d-flex flex-column">
+  <div class="d-flex flex-column flex-fill bg-light">
+    <div class="d-flex flex-row container justify-content-center">
+      <div *ngFor="let d of data; let i = index; let l = last">
+        <div></div>
+        <div
+          [class.mr-1]="!l"
+          class="sort-item"
+          [style.height.px]="d.value * 5"
+          [style.minWidth.px]="itemWidth"
+          [class.bg-primary]="!d.active"
+          [class.bg-success]="d.active && !d.swapping"
+          [class.bg-danger]="d.swapping"
+          [class.bg-secondary]="d.finalrun"
+          [class.bg-warning]="d.pivot"
+        >
+          <div style="color: red;">{{ d.value }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="bg-white p-3 mat-elevation-z1">
+    <div class="container footer-bar">
+      <div class="left d-flex flex-row justify-content-start">
+        <div
+          class="h-100 d-flex flex-column align-items-center justify-content-center"
+        >
+          <h6 class="text-secondary">{{ sortingAlg.name }}</h6>
+        </div>
+      </div>
+      <div
+        class="center d-flex flex-column justify-content-center align-items-center"
+      >
+        <div>
+          <button
+            mat-icon-button
+            matTooltip="Shuffle array"
+            (click)="randomize()"
+          >
+            <mat-icon>shuffle</mat-icon>
+          </button>
+
+          <button
+            mat-icon-button
+            class="mx-4"
+            *ngIf="!($start | async); else stopBtn"
+            (click)="sort(data)"
+          >
+            <mat-icon>play_circle_outline</mat-icon>
+          </button>
+
+          <ng-template #stopBtn>
+            <button mat-icon-button class="mx-4" (click)="stop()">
+              <mat-icon>pause_circle_outline</mat-icon>
+            </button>
+          </ng-template>
+
+          <button mat-icon-button (click)="reset()" matTooltip="Reset array">
+            <mat-icon>refresh</mat-icon>
+          </button>
+        </div>
+        <div>
+          <button
+            *ngFor="let sort of availableSortingAlg; let l = last"
+            class="btn btn-link sort-selection"
+            [class.text-muted]="sort.active"
+            [class.active]="sort.active"
+            [disabled]="sort.active || ($start | async)"
+            (click)="setSorter(sort.alg)"
+          >
+            <small>{{ sort.name }}</small>
+          </button>
+        </div>
+      </div>
+      <div class="right">
+        <div class="d-flex align-items-center justify-content-end">
+          <mat-icon matTooltip="Sorting speed" class="mr-2">speed</mat-icon>
+          <mat-slider
+            min="0"
+            max="1000"
+            step="1"
+            (input)="setDelay($event)"
+            [value]="1000"
+            color="primary"
+          >
+          </mat-slider>
+        </div>
+        <div class="d-flex align-items-center justify-content-end">
+          <mat-icon matTooltip="Element size" class="mr-2"
+            >keyboard_arrow_up</mat-icon
+          >
+          <mat-slider
+            min="0"
+            max="300"
+            step="1"
+            (input)="setItemWidth($event)"
+            color="primary"
+            [value]="300"
+          >
+          </mat-slider>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
